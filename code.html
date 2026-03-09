@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ctrl.code</title>
+<link rel="icon" type="image/x-icon" href="https://pluspng.com/img-png/ctrl-key-png--559.png">
+
+<style>
+/* Reset */
+body, html {
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family: Georgia, serif;
+  background:white;
+  color:black;
+}
+
+/* Header */
+.header {
+  text-align:center;
+  padding:10px;
+}
+
+.header h1 {
+  font-size:50px;
+  margin:0;
+}
+
+.header nav p {
+  font-size:18px;
+}
+
+.header nav a {
+  color:black;
+  text-decoration:none;
+  margin:0 10px;
+}
+
+.header nav a:hover {
+  text-decoration:underline;
+}
+
+/* Viewer container */
+.viewer {
+  display:flex;
+  height:calc(100% - 150px); /* header + nav height */
+  width:100%;
+}
+
+/* Editor */
+#editor {
+  width:50%;
+  height:100%;
+  border:1px solid #ccc;
+  padding:10px;
+  font-family: monospace;
+  font-size:14px;
+  color:black;
+  background:white;
+  resize:none;
+  overflow:auto;
+  box-sizing:border-box;
+}
+
+/* Preview */
+#preview {
+  width:50%;
+  height:100%;
+  border:1px solid #ccc;
+  background:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>ctrl.code - Code</h1>
+<hr>
+<nav>
+<p>
+<a href="games.html">Code</a> |
+<a href="code.html">Credits</a>
+</p>
+</nav>
+<hr>
+</div>
+
+<div class="viewer">
+<textarea id="editor"><!DOCTYPE html>
+<html>
+<head>
+<title>Example</title>
+</head>
+<body>
+<h1>Hello World</h1>
+<p>This should appear on the right.</p>
+</body>
+</html>
+</textarea>
+
+<iframe id="preview"></iframe>
+</div>
+
+<script>
+const editor = document.getElementById("editor");
+const preview = document.getElementById("preview");
+
+function updatePreview() {
+  preview.srcdoc = editor.value;
+}
+
+// Update as you type
+editor.addEventListener("input", updatePreview);
+
+// Initial load
+updatePreview();
+</script>
+
+</body>
+</html>
