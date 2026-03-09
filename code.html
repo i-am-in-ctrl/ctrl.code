@@ -32,7 +32,7 @@ body, html {
 /* Viewer container */
 .viewer {
   display:flex;
-  height:calc(100% - 180px); /* header + nav + button height */
+  height:calc(100% - 210px); /* header + nav + input/button height */
   width:100%;
 }
 
@@ -59,11 +59,20 @@ body, html {
   background:white;
 }
 
-/* Download button */
+/* Download section */
+#downloadContainer {
+  text-align:center;
+  margin:10px 0;
+}
+
+#filenameInput {
+  padding:5px;
+  font-size:16px;
+  width:200px;
+}
+
 #downloadBtn {
-  display:block;
-  margin:10px auto;
-  padding:10px 20px;
+  padding:6px 20px;
   font-size:16px;
   cursor:pointer;
 }
@@ -84,8 +93,11 @@ body, html {
 <hr>
 </div>
 
-<!-- Download button -->
-<button id="downloadBtn">Download as HTML</button>
+<!-- Download section -->
+<div id="downloadContainer">
+  <input type="text" id="filenameInput" placeholder="Enter filename" value="my_code">
+  <button id="downloadBtn">Download as HTML</button>
+</div>
 
 <div class="viewer">
 <textarea id="editor">&lt;!DOCTYPE html&gt;
@@ -117,6 +129,7 @@ body, html {
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const downloadBtn = document.getElementById("downloadBtn");
+const filenameInput = document.getElementById("filenameInput");
 
 function updatePreview() {
   preview.srcdoc = editor.value;
@@ -125,13 +138,15 @@ function updatePreview() {
 editor.addEventListener("input", updatePreview);
 updatePreview();
 
-// Download as HTML
+// Download as HTML with custom filename
 downloadBtn.addEventListener("click", () => {
+  let filename = filenameInput.value.trim();
+  if(filename === "") filename = "my_code"; // fallback
   const blob = new Blob([editor.value], {type: "text/html"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "my_code.html"; // default filename
+  a.download = filename + ".html";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
