@@ -5,7 +5,7 @@
 <link rel="icon" type="image/x-icon" href="https://pluspng.com/img-png/ctrl-key-png--559.png">
 
 <style>
-/* Reset */
+/* Reset & page styling */
 body, html {
   margin:0;
   padding:0;
@@ -14,10 +14,11 @@ body, html {
   background:white;
   color:black;
 }
-  /* Header */
+
+/* Header */
 .header {
-  text-align:center;
-  padding:10px;
+  text-align: center;
+  padding: 10px;
 }
 
 .header h1 {
@@ -28,8 +29,6 @@ body, html {
 .header nav p {
   font-size:18px;
 }
-
-/* Remove all link styling */
 
 /* Viewer container */
 .viewer {
@@ -70,8 +69,8 @@ body, html {
 <hr>
 <nav>
 <p>
-<a href="index.html">Homepage</a> |
-<a href="credits.html">Credits</a>
+<a href="games.html">Code</a> |
+<a href="code.html">Credits</a>
 </p>
 </nav>
 <hr>
@@ -101,7 +100,7 @@ function updatePreview() {
   preview.srcdoc = editor.value;
 }
 
-// Update as you type
+// Update live as you type
 editor.addEventListener("input", updatePreview);
 
 // Initial load
@@ -109,7 +108,4 @@ updatePreview();
 </script>
 
 </body>
-
 </html>
-
-
