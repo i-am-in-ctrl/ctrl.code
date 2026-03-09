@@ -4,77 +4,81 @@
 <link rel="icon" type="image/x-icon" href="https://pluspng.com/img-png/ctrl-key-png--559.png">
 
 <style>
-/* Reset & page styling */
-body, html {
-  margin:0;
-  padding:0;
-  height:100%;
-  font-family: Georgia, serif;
-  background:white;
-  color:black;
+body, html{
+margin:0;
+padding:0;
+height:100%;
+font-family:Georgia, serif;
+background:white;
+color:black;
 }
 
-/* Header */
-.header {
-  text-align: center;
-  padding: 10px;
+.header{
+text-align:center;
+padding:10px;
 }
 
-.header h1 {
-  font-size:50px;
-  margin:0;
+.header h1{
+font-size:50px;
+margin:0;
 }
 
-.header nav p {
-  font-size:18px;
+.header nav p{
+font-size:18px;
 }
 
-/* Viewer container */
-.viewer {
-  display:flex;
-  height:calc(100% - 210px); /* header + nav + input/button height */
-  width:100%;
+#downloadContainer{
+text-align:center;
+margin:10px;
 }
 
-/* Editor */
-#editor {
-  width:50%;
-  height:100%;
-  border:1px solid #ccc;
-  padding:10px;
-  font-family: monospace;
-  font-size:14px;
-  color:black;
-  background:white;
-  resize:none;
-  overflow:auto;
-  box-sizing:border-box;
+#filenameInput{
+padding:5px;
+font-size:16px;
+width:200px;
 }
 
-/* Preview */
-#preview {
-  width:50%;
-  height:100%;
-  border:1px solid #ccc;
-  background:white;
+#downloadBtn{
+padding:6px 20px;
+font-size:16px;
+cursor:pointer;
 }
 
-/* Download section */
-#downloadContainer {
-  text-align:center;
-  margin:10px 0;
+#aiBox{
+text-align:center;
+margin:10px;
 }
 
-#filenameInput {
-  padding:5px;
-  font-size:16px;
-  width:200px;
+#aiInput{
+width:250px;
+padding:5px;
+font-size:14px;
 }
 
-#downloadBtn {
-  padding:6px 20px;
-  font-size:16px;
-  cursor:pointer;
+.viewer{
+display:flex;
+height:calc(100% - 260px);
+width:100%;
+}
+
+#editor{
+width:50%;
+height:100%;
+border:1px solid #ccc;
+padding:10px;
+font-family:monospace;
+font-size:14px;
+background:white;
+resize:none;
+overflow:auto;
+box-sizing:border-box;
+}
+
+#preview{
+width:50%;
+height:100%;
+border:1px solid #ccc;
+background:white;
 }
 </style>
 </head>
@@ -82,7 +86,7 @@ body, html {
 <body>
 
 <div class="header">
-<h1 style="font-size: 60px;">ctrl.code - Code</h1>
+<h1 style="font-size:60px;">ctrl.code - Code</h1>
 <hr>
 <nav>
 <p>
@@ -93,65 +97,110 @@ body, html {
 <hr>
 </div>
 
-<!-- Download section -->
 <div id="downloadContainer">
-  <input type="text" id="filenameInput" placeholder="Enter filename" value="my_code">
-  <button id="downloadBtn">Download as HTML</button>
+<input type="text" id="filenameInput" placeholder="Enter filename" value="my_code">
+<button id="downloadBtn">Download as HTML</button>
+</div>
+
+<div id="aiBox">
+<h3>AI Coding Assistant</h3>
+<input id="aiInput" placeholder="Ask for code (example: make a button)">
+<button onclick="askAI()">Generate</button>
 </div>
 
 <div class="viewer">
-<textarea id="editor">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;Example&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Hello World&lt;/h1&gt;
-&lt;p&gt;This should appear on the right.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+
+<textarea id="editor"><!DOCTYPE html>
+<html>
+<head>
+<title>Example</title>
+</head>
+<body>
+<h1>Hello World</h1>
+<p>This should appear on the right.</p>
+</body>
+</html>
 </textarea>
 
-<iframe id="preview" srcdoc="&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;Example&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Hello World&lt;/h1&gt;
-&lt;p&gt;This should appear on the right.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-"></iframe>
+<iframe id="preview"></iframe>
+
 </div>
 
 <script>
+
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const downloadBtn = document.getElementById("downloadBtn");
 const filenameInput = document.getElementById("filenameInput");
 
-function updatePreview() {
-  preview.srcdoc = editor.value;
+function updatePreview(){
+preview.srcdoc = editor.value;
 }
 
 editor.addEventListener("input", updatePreview);
+
 updatePreview();
 
-// Download as HTML with custom filename
 downloadBtn.addEventListener("click", () => {
-  let filename = filenameInput.value.trim();
-  if(filename === "") filename = "my_code"; // fallback
-  const blob = new Blob([editor.value], {type: "text/html"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename + ".html";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+
+let filename = filenameInput.value.trim();
+
+if(filename === "") filename = "my_code";
+
+const blob = new Blob([editor.value], {type:"text/html"});
+const url = URL.createObjectURL(blob);
+
+const a = document.createElement("a");
+
+a.href = url;
+a.download = filename + ".html";
+
+document.body.appendChild(a);
+
+a.click();
+
+document.body.removeChild(a);
+
+URL.revokeObjectURL(url);
+
 });
+
+function askAI(){
+
+const question = document.getElementById("aiInput").value.toLowerCase();
+
+let result = "";
+
+if(question.includes("button")){
+result = "<button>Click Me</button>";
+}
+
+else if(question.includes("image")){
+result = '<img src="https://via.placeholder.com/150">';
+}
+
+else if(question.includes("paragraph")){
+result = "<p>This is a paragraph.</p>";
+}
+
+else if(question.includes("heading")){
+result = "<h1>Heading</h1>";
+}
+
+else if(question.includes("link")){
+result = '<a href="#">Example Link</a>';
+}
+
+else{
+result = "<p>I could not understand. Try asking for button, image, paragraph, heading, or link.</p>";
+}
+
+editor.value += "\n" + result;
+
+updatePreview();
+
+}
+
 </script>
 
 </body>
