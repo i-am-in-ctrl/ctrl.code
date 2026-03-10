@@ -138,7 +138,6 @@ background:white;
 </div>
 
 <script>
-
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const filenameInput = document.getElementById("filenameInput");
@@ -151,303 +150,169 @@ editor.addEventListener("input", updatePreview);
 updatePreview();
 
 /* DOWNLOAD */
-
 document.getElementById("downloadBtn").onclick = function(){
-
 let filename = filenameInput.value.trim();
 if(filename==="") filename="my_code";
-
 const blob = new Blob([editor.value],{type:"text/html"});
 const url = URL.createObjectURL(blob);
-
 const a=document.createElement("a");
 a.href=url;
 a.download=filename+".html";
-
 document.body.appendChild(a);
 a.click();
 document.body.removeChild(a);
-
 URL.revokeObjectURL(url);
 };
 
 /* INSERT INTO BODY */
-
 function insertIntoBody(code){
-
 let page = editor.value;
-
 if(page.includes("</body>")){
 editor.value = page.replace("</body>", code+"\n</body>");
-}
-else{
+} else {
 editor.value += "\n"+code;
 }
-
 updatePreview();
 }
 
 /* AI ASSISTANT */
-
 function askAI(){
+const q = document.getElementById("aiInput").value.toLowerCase();
 
-const q=document.getElementById("aiInput").value.toLowerCase();
-
-/* NAVBAR */
-
+/* NAVIGATION / LAYOUT */
 if(q.includes("navbar")){
-insertIntoBody(`<nav style="background:#eee;padding:10px;">
-<a href="#">Home</a> |
-<a href="#">About</a> |
-<a href="#">Projects</a> |
-<a href="#">Contact</a>
-</nav>`);
+insertIntoBody(`<nav style="background:#eee;padding:10px;"><a href="#">Home</a> | <a href="#">About</a> | <a href="#">Projects</a> | <a href="#">Contact</a></nav>`);
+} 
+else if(q.includes("footer")){
+insertIntoBody('<footer style="background:#333;color:white;padding:10px;text-align:center;">Footer Content</footer>');
+}
+else if(q.includes("menu")){
+insertIntoBody('<ul><li>Home</li><li>About</li><li>Projects</li><li>Contact</li></ul>');
+}
+else if(q.includes("sidebar")){
+insertIntoBody('<div style="width:200px;height:100%;float:left;border:1px solid #ccc;padding:10px;">Sidebar</div>');
+}
+else if(q.includes("section")){
+insertIntoBody('<section style="padding:20px;border:1px solid #ccc;">Section</section>');
+}
+else if(q.includes("container")){
+insertIntoBody('<div style="max-width:800px;margin:auto;">Container</div>');
+}
+else if(q.includes("columns")){
+insertIntoBody(`<div style="display:flex;"><div style="flex:1;border:1px solid #ccc;">Column 1</div><div style="flex:1;border:1px solid #ccc;">Column 2</div></div>`);
+}
+else if(q.includes("flex layout")){
+insertIntoBody('<div style="display:flex;"><div style="flex:1">Flex Item 1</div><div style="flex:1">Flex Item 2</div></div>');
+}
+else if(q.includes("grid layout")){
+insertIntoBody('<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;"><div>1</div><div>2</div><div>3</div></div>');
 }
 
 /* BUTTONS */
-
 else if(q.includes("blue button")){
 insertIntoBody('<button style="background:blue;color:white;padding:10px;border:none;border-radius:6px;">Blue Button</button>');
 }
-
 else if(q.includes("red button")){
 insertIntoBody('<button style="background:red;color:white;padding:10px;border:none;">Red Button</button>');
 }
-
 else if(q.includes("green button")){
 insertIntoBody('<button style="background:green;color:white;padding:10px;border:none;">Green Button</button>');
 }
-
 else if(q.includes("rounded button")){
 insertIntoBody('<button style="padding:10px;border-radius:20px;">Rounded Button</button>');
 }
-
 else if(q.includes("big button")){
 insertIntoBody('<button style="padding:20px;font-size:20px;">Big Button</button>');
 }
 
 /* FORMS */
-
 else if(q.includes("login")){
-insertIntoBody(`
-<form style="max-width:300px;">
-<h3>Login</h3>
-<input type="text" placeholder="Username"><br><br>
-<input type="password" placeholder="Password"><br><br>
-<button>Login</button>
-</form>
-`);
+insertIntoBody(`<form style="max-width:300px;"><h3>Login</h3><input type="text" placeholder="Username"><br><br><input type="password" placeholder="Password"><br><br><button>Login</button></form>`);
 }
-
 else if(q.includes("signup")){
-insertIntoBody(`
-<form>
-<h3>Sign Up</h3>
-<input placeholder="Email"><br><br>
-<input type="password" placeholder="Password"><br><br>
-<button>Sign Up</button>
-</form>
-`);
+insertIntoBody(`<form style="max-width:300px;"><h3>Sign Up</h3><input placeholder="Email"><br><br><input type="password" placeholder="Password"><br><br><button>Sign Up</button></form>`);
 }
-
 else if(q.includes("input")){
 insertIntoBody('<input placeholder="Type here">');
 }
-
 else if(q.includes("checkbox")){
 insertIntoBody('<label><input type="checkbox"> Option</label>');
 }
-
 else if(q.includes("dropdown")){
-insertIntoBody(`
-<select>
-<option>Option 1</option>
-<option>Option 2</option>
-<option>Option 3</option>
-</select>
-`);
+insertIntoBody(`<select><option>Option 1</option><option>Option 2</option><option>Option 3</option></select>`);
 }
 
 /* TEXT */
-
 else if(q.includes("heading")){
 insertIntoBody("<h2>Heading</h2>");
 }
-
 else if(q.includes("paragraph")){
 insertIntoBody("<p>This is a paragraph.</p>");
 }
-
 else if(q.includes("quote")){
 insertIntoBody("<blockquote>This is a quote.</blockquote>");
 }
-
 else if(q.includes("list")){
 insertIntoBody("<ul><li>Item 1</li><li>Item 2</li></ul>");
 }
 
 /* MEDIA */
-
 else if(q.includes("image")){
 insertIntoBody('<img src="https://via.placeholder.com/200">');
 }
-
+else if(q.includes("gallery")){
+insertIntoBody(`<img src="https://via.placeholder.com/150"><img src="https://via.placeholder.com/150"><img src="https://via.placeholder.com/150">`);
+}
 else if(q.includes("video")){
 insertIntoBody('<video controls width="300"><source src="" type="video/mp4"></video>');
 }
-
 else if(q.includes("iframe")){
 insertIntoBody('<iframe src="https://example.com" width="300" height="200"></iframe>');
 }
 
-else if(q.includes("gallery")){
-insertIntoBody(`
-<img src="https://via.placeholder.com/150">
-<img src="https://via.placeholder.com/150">
-<img src="https://via.placeholder.com/150">
-`);
-}
-
 /* COMPONENTS */
-
 else if(q.includes("card")){
-insertIntoBody(`
-<div style="border:1px solid #ccc;padding:20px;width:200px;">
-<h3>Card</h3>
-<p>Example card.</p>
-</div>
-`);
+insertIntoBody(`<div style="border:1px solid #ccc;padding:20px;width:200px;"><h3>Card</h3><p>Example card.</p></div>`);
 }
-
 else if(q.includes("table")){
-insertIntoBody(`
-<table border="1">
-<tr><th>Name</th><th>Age</th></tr>
-<tr><td>Alice</td><td>20</td></tr>
-<tr><td>Bob</td><td>25</td></tr>
-</table>
-`);
+insertIntoBody(`<table border="1"><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>20</td></tr><tr><td>Bob</td><td>25</td></tr></table>`);
 }
-
-/* LAYOUT */
-
-else if(q.includes("container")){
-insertIntoBody('<div style="max-width:800px;margin:auto;">Container</div>');
-}
-
-else if(q.includes("section")){
-insertIntoBody('<section style="padding:20px;border:1px solid #ccc;">Section</section>');
-}
-
-else if(q.includes("columns")){
-insertIntoBody(`
-<div style="display:flex;">
-<div style="flex:1;border:1px solid #ccc;">Column 1</div>
-<div style="flex:1;border:1px solid #ccc;">Column 2</div>
-</div>
-`);
+else if(q.includes("pricing table")){
+insertIntoBody(`<table border="1"><tr><th>Plan</th><th>Price</th></tr><tr><td>Basic</td><td>$10</td></tr><tr><td>Pro</td><td>$30</td></tr></table>`);
 }
 
 /* STYLING */
-
 else if(q.includes("background")){
 insertIntoBody('<style>body{background:#f5f5f5}</style>');
 
 }
-
 else if(q.includes("gradient")){
 insertIntoBody('<style>body{background:linear-gradient(to right,#6a11cb,#2575fc)}</style>');
 }
-
 else if(q.includes("center")){
 insertIntoBody('<style>body{text-align:center}</style>');
-}
 
 /* JAVASCRIPT */
-
-else if(q.includes("counter")){
-insertIntoBody(` <button onclick="count++;document.getElementById('count').innerText=count;">Click</button>
-
-<p>Count: <span id="count">0</span></p>
-<script>
-let count=0;
-<\/script>
-`);
-}
-
-else if(q.includes("timer")){
-insertIntoBody(`
-
-<p id="timer">0</p>
-<script>
-let t=0;
-setInterval(()=>{t++;document.getElementById("timer").innerText=t;},1000);
-<\/script>
-`);
-}
-
-else if(q.includes("popup")){
+} else if(q.includes("counter")){
+insertIntoBody('<button onclick="count++;document.getElementById(\'count\').innerText=count;">Click</button><p>Count: <span id="count">0</span></p><script>let count=0;</script>');
+} else if(q.includes("timer")){
+insertIntoBody('<p id="timer">0</p><script>let t=0;setInterval(()=>{t++;document.getElementById("timer").innerText=t;},1000);</script>');
+} else if(q.includes("popup")){
 insertIntoBody('<button onclick="alert(\'Hello!\')">Show Popup</button>');
+} else if(q.includes("click game") || q.includes("game")){
+insertIntoBody('<h3>Click Game</h3><button onclick="score++;document.getElementById(\'score\').innerText=score;">Click Me</button><p>Score: <span id="score">0</span></p><script>let score=0;</script>');
+} else if(q.includes("portfolio")){
+editor.value = `<!DOCTYPE html><html><head><title>My Portfolio</title><style>body{font-family:Arial;margin:0}header{background:#333;color:white;padding:20px;text-align:center}section{padding:20px}</style></head><body><header><h1>My Portfolio</h1><p>Welcome to my website</p></header><section><h2>About Me</h2><p>I am a web developer.</p></section><section><h2>Projects</h2><p>Project coming soon.</p></section></body></html>`;
+} else if(q.includes("fix code")){
+let code=editor.value;
+if(!code.includes("<!DOCTYPE html>")) code="<!DOCTYPE html>\n"+code;
+if(!code.includes("<html>")) code="<html>\n"+code+"\n</html>";
+editor.value=code;
+} else {
+insertIntoBody("<p>AI did not understand. Try a supported command.</p>");
 }
-
-else if(q.includes("game")){
-insertIntoBody(`
-
-<h3>Click Game</h3>
-<button onclick="score++;document.getElementById('score').innerText=score;">Click Me</button>
-<p>Score: <span id="score">0</span></p>
-<script>
-let score=0;
-<\/script>
-`);
-}
-
-/* PORTFOLIO */
-
-else if(q.includes("portfolio")){
-editor.value = `<!DOCTYPE html>
-
-<html>
-<head>
-<title>My Portfolio</title>
-<style>
-body{font-family:Arial;margin:0}
-header{background:#333;color:white;padding:20px;text-align:center}
-section{padding:20px}
-</style>
-</head>
-<body>
-
-<header>
-<h1>My Portfolio</h1>
-<p>Welcome to my website</p>
-</header>
-
-<section>
-<h2>About Me</h2>
-<p>I am a web developer.</p>
-</section>
-
-<section>
-<h2>Projects</h2>
-<p>Project coming soon.</p>
-</section>
-
-</body>
-</html>`;
-}
-
-/* UNKNOWN */
-
-else{
-insertIntoBody("<p>AI did not understand. Try: navbar, login form, button, card, counter, game.</p>");
-}
-
 updatePreview();
-
-}
-
-</script>
+} </script>
 
 </body>
 </html>
