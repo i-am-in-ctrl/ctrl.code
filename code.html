@@ -50,14 +50,14 @@ margin:10px;
 }
 
 #aiInput{
-width:250px;
-padding:5px;
+width:260px;
+padding:6px;
 font-size:14px;
 }
 
 .viewer{
 display:flex;
-height:calc(100% - 260px);
+height:calc(100% - 270px);
 width:100%;
 }
 
@@ -81,6 +81,7 @@ border:1px solid #ccc;
 background:white;
 }
 </style>
+
 </head>
 
 <body>
@@ -104,7 +105,7 @@ background:white;
 
 <div id="aiBox">
 <h3>AI Coding Assistant</h3>
-<input id="aiInput" placeholder="Ask for code (example: make a button)">
+<input id="aiInput" placeholder="Try: make a navbar, login form, game">
 <button onclick="askAI()">Generate</button>
 </div>
 
@@ -138,66 +139,97 @@ preview.srcdoc = editor.value;
 }
 
 editor.addEventListener("input", updatePreview);
-
 updatePreview();
 
 downloadBtn.addEventListener("click", () => {
 
 let filename = filenameInput.value.trim();
-
 if(filename === "") filename = "my_code";
 
 const blob = new Blob([editor.value], {type:"text/html"});
 const url = URL.createObjectURL(blob);
 
 const a = document.createElement("a");
-
 a.href = url;
 a.download = filename + ".html";
 
 document.body.appendChild(a);
-
 a.click();
-
 document.body.removeChild(a);
 
 URL.revokeObjectURL(url);
 
 });
 
+function insertIntoBody(codeSnippet){
+
+let code = editor.value;
+
+if(code.includes("</body>")){
+editor.value = code.replace("</body>", codeSnippet + "\n</body>");
+}else{
+editor.value += "\n" + codeSnippet;
+}
+
+updatePreview();
+
+}
+
 function askAI(){
 
-const question = document.getElementById("aiInput").value.toLowerCase();
+const q = document.getElementById("aiInput").value.toLowerCase();
 
-let result = "";
-
-if(question.includes("button")){
-result = "<button>Click Me</button>";
+if(q.includes("button") && q.includes("blue")){
+insertIntoBody('<button style="background:blue;color:white;padding:10px;border:none;border-radius:5px;">Blue Button</button>');
 }
 
-else if(question.includes("image")){
-result = '<img src="https://via.placeholder.com/150">';
+else if(q.includes("button")){
+insertIntoBody('<button>Click Me</button>');
 }
 
-else if(question.includes("paragraph")){
-result = "<p>This is a paragraph.</p>";
+else if(q.includes("navbar")){
+insertIntoBody(`
+<nav style="background:#eee;padding:10px;">
+<a href="#">Home</a> |
+<a href="#">About</a> |
+<a href="#">Contact</a>
+</nav>
+`);
 }
 
-else if(question.includes("heading")){
-result = "<h1>Heading</h1>";
+else if(q.includes("login")){
+insertIntoBody(`
+<form style="max-width:300px;">
+<h3>Login</h3>
+<input type="text" placeholder="Username"><br><br>
+<input type="password" placeholder="Password"><br><br>
+<button>Login</button>
+</form>
+`);
 }
 
-else if(question.includes("link")){
-result = '<a href="#">Example Link</a>';
+else if(q.includes("paragraph")){
+insertIntoBody('<p>This is a paragraph.</p>');
+}
+
+else if(q.includes("image")){
+insertIntoBody('<img src="https://via.placeholder.com/200">');
+}
+
+else if(q.includes("game")){
+insertIntoBody(`
+<h3>Click Game</h3>
+<button onclick="score++ ; document.getElementById('score').innerText = score">Click Me</button>
+<p>Score: <span id="score">0</span></p>
+<script>
+let score = 0;
+<\/script>
+`);
 }
 
 else{
-result = "<p>I could not understand. Try asking for button, image, paragraph, heading, or link.</p>";
+insertIntoBody('<p>AI did not understand. Try: navbar, login form, game, button.</p>');
 }
-
-editor.value += "\n" + result;
-
-updatePreview();
 
 }
 
