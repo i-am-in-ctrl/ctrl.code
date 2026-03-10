@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html>
 <head>
 <title>ctrl.code</title>
@@ -33,7 +35,7 @@ margin:10px;
 }
 
 #filenameInput{
-padding:5px;
+padding:6px;
 font-size:16px;
 width:200px;
 }
@@ -50,7 +52,7 @@ margin:10px;
 }
 
 #aiInput{
-width:260px;
+width:280px;
 padding:6px;
 font-size:14px;
 }
@@ -99,13 +101,13 @@ background:white;
 </div>
 
 <div id="downloadContainer">
-<input type="text" id="filenameInput" placeholder="Enter filename" value="my_code">
+<input type="text" id="filenameInput" value="my_code">
 <button id="downloadBtn">Download as HTML</button>
 </div>
 
 <div id="aiBox">
 <h3>AI Coding Assistant</h3>
-<input id="aiInput" placeholder="Try: make a navbar, login form, game">
+<input id="aiInput" placeholder="Try: navbar, login form, game, portfolio site">
 <button onclick="askAI()">Generate</button>
 </div>
 
@@ -117,8 +119,10 @@ background:white;
 <title>Example</title>
 </head>
 <body>
+
 <h1>Hello World</h1>
 <p>This should appear on the right.</p>
+
 </body>
 </html>
 </textarea>
@@ -131,7 +135,6 @@ background:white;
 
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
-const downloadBtn = document.getElementById("downloadBtn");
 const filenameInput = document.getElementById("filenameInput");
 
 function updatePreview(){
@@ -141,61 +144,69 @@ preview.srcdoc = editor.value;
 editor.addEventListener("input", updatePreview);
 updatePreview();
 
-downloadBtn.addEventListener("click", () => {
+/* DOWNLOAD */
+
+document.getElementById("downloadBtn").onclick = function(){
 
 let filename = filenameInput.value.trim();
-if(filename === "") filename = "my_code";
+if(filename==="") filename="my_code";
 
-const blob = new Blob([editor.value], {type:"text/html"});
+const blob = new Blob([editor.value],{type:"text/html"});
 const url = URL.createObjectURL(blob);
 
-const a = document.createElement("a");
-a.href = url;
-a.download = filename + ".html";
+const a=document.createElement("a");
+a.href=url;
+a.download=filename+".html";
 
 document.body.appendChild(a);
 a.click();
 document.body.removeChild(a);
 
 URL.revokeObjectURL(url);
+};
 
-});
+/* INSERT CODE */
 
-function insertIntoBody(codeSnippet){
+function insertIntoBody(code){
 
-let code = editor.value;
+let page = editor.value;
 
-if(code.includes("</body>")){
-editor.value = code.replace("</body>", codeSnippet + "\n</body>");
-}else{
-editor.value += "\n" + codeSnippet;
+if(page.includes("</body>")){
+editor.value = page.replace("</body>", code+"\n</body>");
+}
+else{
+editor.value += "\n"+code;
 }
 
 updatePreview();
-
 }
+
+/* AI ASSISTANT */
 
 function askAI(){
 
-const q = document.getElementById("aiInput").value.toLowerCase();
+const q=document.getElementById("aiInput").value.toLowerCase();
 
-if(q.includes("button") && q.includes("blue")){
-insertIntoBody('<button style="background:blue;color:white;padding:10px;border:none;border-radius:5px;">Blue Button</button>');
+/* BUTTONS */
+
+if(q.includes("blue button")){
+insertIntoBody('<button style="background:blue;color:white;padding:10px;border:none;border-radius:6px;">Blue Button</button>');
 }
 
-else if(q.includes("button")){
-insertIntoBody('<button>Click Me</button>');
-}
+/* NAVBAR */
 
 else if(q.includes("navbar")){
 insertIntoBody(`
 <nav style="background:#eee;padding:10px;">
 <a href="#">Home</a> |
 <a href="#">About</a> |
+<a href="#">Projects</a> |
 <a href="#">Contact</a>
 </nav>
 `);
 }
+
+/* LOGIN FORM */
 
 else if(q.includes("login")){
 insertIntoBody(`
@@ -208,28 +219,100 @@ insertIntoBody(`
 `);
 }
 
-else if(q.includes("paragraph")){
-insertIntoBody('<p>This is a paragraph.</p>');
+/* COUNTER APP */
+
+else if(q.includes("counter")){
+insertIntoBody(`
+<h3>Counter</h3>
+<button onclick="count++;document.getElementById('count').innerText=count;">Click</button>
+<p>Count: <span id="count">0</span></p>
+<script>
+let count=0;
+<\/script>
+`);
 }
+
+/* CLICK GAME */
+
+else if(q.includes("game")){
+insertIntoBody(`
+<h3>Click Game</h3>
+<button onclick="score++;document.getElementById('score').innerText=score;">Click Me</button>
+<p>Score: <span id="score">0</span></p>
+<script>
+let score=0;
+<\/script>
+`);
+}
+
+/* PORTFOLIO WEBSITE */
+
+else if(q.includes("portfolio")){
+editor.value = `<!DOCTYPE html>
+<html>
+<head>
+<title>My Portfolio</title>
+<style>
+body{font-family:Arial;margin:0}
+header{background:#333;color:white;padding:20px;text-align:center}
+section{padding:20px}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>My Portfolio</h1>
+<p>Welcome to my website</p>
+</header>
+
+<section>
+<h2>About Me</h2>
+<p>I am a web developer.</p>
+</section>
+
+<section>
+<h2>Projects</h2>
+<p>Project coming soon.</p>
+</section>
+
+</body>
+</html>`;
+}
+
+/* FIX HTML */
+
+else if(q.includes("fix code")){
+let code=editor.value;
+
+if(!code.includes("<!DOCTYPE html>"))
+code="<!DOCTYPE html>\n"+code;
+
+if(!code.includes("<html>"))
+code="<html>\n"+code+"\n</html>";
+
+editor.value=code;
+}
+
+/* IMAGE */
 
 else if(q.includes("image")){
 insertIntoBody('<img src="https://via.placeholder.com/200">');
 }
 
-else if(q.includes("game")){
-insertIntoBody(`
-<h3>Click Game</h3>
-<button onclick="score++ ; document.getElementById('score').innerText = score">Click Me</button>
-<p>Score: <span id="score">0</span></p>
-<script>
-let score = 0;
-<\/script>
-`);
+/* PARAGRAPH */
+
+else if(q.includes("paragraph")){
+insertIntoBody("<p>This is a paragraph.</p>");
 }
 
+/* UNKNOWN */
+
 else{
-insertIntoBody('<p>AI did not understand. Try: navbar, login form, game, button.</p>');
+insertIntoBody("<p>AI did not understand. Try: navbar, login form, counter, game, portfolio.</p>");
 }
+
+updatePreview();
 
 }
 
